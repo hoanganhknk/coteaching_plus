@@ -337,9 +337,9 @@ def main():
     if args.dataset == 'mnist':
         clf2 = MLPNet()
     if args.dataset == 'cifar10':
-        clf2 = CNN_small(num_classes)
+        clf1 = resnet32(num_classes)
     if args.dataset == 'cifar100':
-        clf2 = CNN(n_outputs=num_classes)
+        clf1 = resnet32(num_classes)
     if args.dataset=='news':
         clf2 = NewsNet(weights_matrix=train_dataset.weights_matrix, num_classes=num_classes)
     if args.dataset=='imagenet_tiny':
