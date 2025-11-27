@@ -97,3 +97,4 @@ class PreActResNet(nn.Module):
 def PreActResNet18(num_classes=200):
     return PreActResNet(PreActBlock, [2,2,2,2], num_classes=num_classes)
 
+

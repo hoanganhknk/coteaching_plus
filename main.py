@@ -10,7 +10,7 @@ from data.cifar import CIFAR10, CIFAR100
 from data.mnist import MNIST
 from data.newsgroups import NewsGroups
 from data.torchlist import ImageFilelist
-from model import MLPNet, CNN_small, CNN, NewsNet
+from model import MLPNet, CNN_small, CNN, NewsNet, resnet32
 from preact_resnet import PreActResNet18
 import argparse, sys
 import numpy as np
@@ -322,9 +322,9 @@ def main():
     if args.dataset == 'mnist':
         clf1 = MLPNet()
     if args.dataset == 'cifar10':
-        clf1 = CNN_small(num_classes)
+        clf1 = resnet32(num_classes)
     if args.dataset == 'cifar100':
-        clf1 = CNN(n_outputs=num_classes)
+        clf1 = resnet32(num_classes)
     if args.dataset=='news':
         clf1 = NewsNet(weights_matrix=train_dataset.weights_matrix, num_classes=num_classes)
     if args.dataset=='imagenet_tiny':
