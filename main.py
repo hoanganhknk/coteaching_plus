@@ -73,10 +73,22 @@ if args.dataset=='cifar10':
     init_epoch = 20
     num_classes = 10
     args.n_epoch = 200
+    normalize = transforms.Normalize(mean=[x / 255.0 for x in [125.3, 123.0, 113.9]],
+                                     std=[x / 255.0 for x in [63.0, 62.1, 66.7]])
+    train_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: F.pad(x.unsqueeze(0),
+                                              (4, 4, 4, 4), mode='reflect').squeeze()),
+            transforms.ToPILImage(),
+            transforms.RandomCrop(32),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])
     train_dataset = CIFAR10(root='./data/',
                                 download=True,  
                                 train=True, 
-                                transform=transforms.ToTensor(),
+                                transform=train_transform,
                                 noise_type=args.noise_type,
                                 noise_rate=args.noise_rate
                                 )
@@ -94,10 +106,22 @@ if args.dataset=='cifar100':
     init_epoch = 5
     num_classes = 100
     args.n_epoch = 200
+    normalize = transforms.Normalize(mean=[x / 255.0 for x in [125.3, 123.0, 113.9]],
+                                     std=[x / 255.0 for x in [63.0, 62.1, 66.7]])
+    train_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: F.pad(x.unsqueeze(0),
+                                              (4, 4, 4, 4), mode='reflect').squeeze()),
+            transforms.ToPILImage(),
+            transforms.RandomCrop(32),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])
     train_dataset = CIFAR100(root='./data/',
                                 download=True,  
                                 train=True, 
-                                transform=transforms.ToTensor(),
+                                transform=train_transform,
                                 noise_type=args.noise_type,
                                 noise_rate=args.noise_rate
                                 )
