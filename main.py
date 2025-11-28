@@ -76,15 +76,10 @@ if args.dataset=='cifar10':
     normalize = transforms.Normalize(mean=[x / 255.0 for x in [125.3, 123.0, 113.9]],
                                      std=[x / 255.0 for x in [63.0, 62.1, 66.7]])
     train_transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Lambda(lambda x: F.pad(x.unsqueeze(0),
-                                              (4, 4, 4, 4), mode='reflect').squeeze()),
-            transforms.ToPILImage(),
-            transforms.RandomCrop(32),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            normalize,
-        ])
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+    ])
     train_dataset = CIFAR10(root='./data/',
                                 download=True,  
                                 train=True, 
@@ -109,15 +104,10 @@ if args.dataset=='cifar100':
     normalize = transforms.Normalize(mean=[x / 255.0 for x in [125.3, 123.0, 113.9]],
                                      std=[x / 255.0 for x in [63.0, 62.1, 66.7]])
     train_transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Lambda(lambda x: F.pad(x.unsqueeze(0),
-                                              (4, 4, 4, 4), mode='reflect').squeeze()),
-            transforms.ToPILImage(),
-            transforms.RandomCrop(32),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            normalize,
-        ])
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+    ])
     train_dataset = CIFAR100(root='./data/',
                                 download=True,  
                                 train=True, 
