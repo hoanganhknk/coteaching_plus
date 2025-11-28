@@ -163,19 +163,34 @@ else:
     noise_or_not = train_dataset.noise_or_not
 
 # Adjust learning rate and betas for Adam Optimizer
-mom1 = 0.9
-mom2 = 0.1
-alpha_plan = [learning_rate] * args.n_epoch
-beta1_plan = [mom1] * args.n_epoch
-for i in range(args.epoch_decay_start, args.n_epoch):
-    alpha_plan[i] = float(args.n_epoch - i) / (args.n_epoch - args.epoch_decay_start) * learning_rate
-    beta1_plan[i] = mom2
+# mom1 = 0.9
+# mom2 = 0.1
+# alpha_plan = [learning_rate] * args.n_epoch
+# beta1_plan = [mom1] * args.n_epoch
+# for i in range(args.epoch_decay_start, args.n_epoch):
+#     alpha_plan[i] = float(args.n_epoch - i) / (args.n_epoch - args.epoch_decay_start) * learning_rate
+#     beta1_plan[i] = mom2
 
+# def adjust_learning_rate(optimizer, epoch):
+#     for param_group in optimizer.param_groups:
+#         param_group['lr']=alpha_plan[epoch]
+#         param_group['betas']=(beta1_plan[epoch], 0.999) 
 def adjust_learning_rate(optimizer, epoch):
+    """Step LR schedule for SGD:
+       0   - 139: lr = 0.1
+       140 - 179: lr = 0.01
+       >= 180: lr = 0.001
+    """
+    lr = learning_rate
+    if epoch >= 180:
+        lr = learning_rate * 0.01   # 0.001 nếu learning_rate = 0.1
+    elif epoch >= 140:
+        lr = learning_rate * 0.1    # 0.01  nếu learning_rate = 0.1
+
     for param_group in optimizer.param_groups:
-        param_group['lr']=alpha_plan[epoch]
-        param_group['betas']=(beta1_plan[epoch], 0.999) 
-       
+        param_group['lr'] = lr
+
+
 # define drop rate schedule
 def gen_forget_rate(fr_type='type_1'):
     if fr_type=='type_1':
@@ -332,8 +347,13 @@ def main():
 
     clf1.cuda()
     print(clf1.parameters)
-    optimizer1 = torch.optim.Adam(clf1.parameters(), lr=learning_rate)
-    
+    # optimizer1 = torch.optim.Adam(clf1.parameters(), lr=learning_rate)
+    optimizer1 = torch.optim.SGD(
+        clf1.parameters(),
+        lr=0.1,      # nên set --lr 0.1
+        momentum=0.9,
+        weight_decay=5e-4
+    )
     if args.dataset == 'mnist':
         clf2 = MLPNet()
     if args.dataset == 'cifar10':
@@ -347,7 +367,13 @@ def main():
 
     clf2.cuda()
     print(clf2.parameters)
-    optimizer2 = torch.optim.Adam(clf2.parameters(), lr=learning_rate)
+    # optimizer2 = torch.optim.Adam(clf2.parameters(), lr=learning_rate)
+    optimizer2 = torch.optim.SGD(
+        clf2.parameters(),
+        lr=learning_rate,
+        momentum=0.9,
+        weight_decay=5e-4
+    )
 
     with open(txtfile, "a") as myfile:
         myfile.write('epoch train_acc1 train_acc2 test_acc1 test_acc2\n')
